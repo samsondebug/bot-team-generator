@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grok Bot Team Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07080b;--bg2:#0d0f14;--card:#12151c;--card2:#181c25;--line:#252a36;--text:#eef1f6;--muted:#8d95a7;--acc:#7c8cff;--acc2:#38e1b0;--warn:#ffb547;--bad:#ff6b6b;--r:16px}
+*{box-sizing:border-box}
+html,body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#1a1f3a 0%,transparent 60%),radial-gradient(900px 500px at -10% 110%,#0f2a25 0%,transparent 55%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55;min-height:100vh}
+a{color:var(--acc)}
+.wrap{max-width:820px;margin:0 auto;padding:28px 18px 80px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em;font-size:1.1rem}
+.logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:grid;place-items:center;color:#06070a;font-weight:900}
+.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px;border-radius:10px;cursor:pointer;font:inherit;font-size:.85rem}
+.ghost:hover{color:var(--text);border-color:#3a4152}
+.progress{height:6px;background:#1a1e28;border-radius:99px;overflow:hidden;margin-bottom:8px}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .35s ease}
+.stepmeta{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem;margin-bottom:18px}
+.card{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:var(--r);padding:28px;box-shadow:0 20px 60px -30px #000}
+.screen{animation:in .3s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(1.6rem,4vw,2.3rem);letter-spacing:-.03em;margin:.1em 0 .3em;line-height:1.15}
+h2{font-size:clamp(1.25rem,3vw,1.6rem);letter-spacing:-.02em;margin:0 0 .35em;line-height:1.25}
+h3{margin:0;font-size:1.1rem}
+.lead{color:var(--muted);margin:0 0 20px}
+.kicker{color:var(--acc2);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.12em}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 18px}
+.chip{border:1px solid var(--line);background:var(--card2);color:var(--text);padding:10px 14px;border-radius:999px;cursor:pointer;font:inherit;font-size:.93rem;transition:.15s;user-select:none}
+.chip:hover{border-color:#3d4560}
+.chip[aria-pressed=true]{background:rgba(124,140,255,.16);border-color:var(--acc);color:#fff;box-shadow:0 0 0 3px rgba(124,140,255,.15)}
+.chip.locked{opacity:.9;cursor:default}
+.chip:focus-visible,.btn:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+textarea,input[type=text],input[type=url]{width:100%;background:#0a0c11;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:12px 14px;font:inherit;font-size:1rem}
+textarea{min-height:96px;resize:vertical}
+.hint{color:var(--muted);font-size:.84rem;margin-top:8px}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:24px}
+.btn{border:0;border-radius:12px;padding:12px 20px;font:inherit;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--acc),#9a7cff);color:#fff;transition:.15s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{filter:brightness(1.1)}
+.btn.sec{background:var(--card2);border:1px solid var(--line);color:var(--text)}
+.btn.green{background:linear-gradient(135deg,var(--acc2),#2bb3ff);color:#04110d}
+.btn.sm{padding:8px 12px;font-size:.85rem;border-radius:10px}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.kbd{color:var(--muted);font-size:.78rem}
+kbd{font-family:"JetBrains Mono",monospace;background:#1b1f2a;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:.75rem}
+.grid{display:grid;gap:14px}
+.bot{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:18px;position:relative;overflow:hidden}
+.bot:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--c,var(--acc))}
+.bot .top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.av{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:1.2rem;background:#0b0d12;border:1px solid var(--line)}
+.role{color:var(--muted);font-size:.8rem}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;font-size:.92rem;margin:10px 0}
+.kv b{color:var(--muted);font-weight:500}
+details summary{cursor:pointer;color:var(--acc);font-size:.9rem;margin:6px 0}
+pre{background:#090b10;border:1px solid var(--line);border-radius:12px;padding:14px;white-space:pre-wrap;word-break:break-word;font-family:"JetBrains Mono",monospace;font-size:.8rem;line-height:1.55;max-height:420px;overflow:auto;margin:8px 0}
+.note{border:1px solid var(--line);border-left:4px solid var(--warn);background:rgba(255,181,71,.06);padding:12px 14px;border-radius:10px;font-size:.92rem;margin:14px 0}
+.note.ok{border-left-color:var(--acc2);background:rgba(56,225,176,.06)}
+.section{margin-top:28px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.handoff{border:1px solid rgba(124,140,255,.5);background:linear-gradient(160deg,rgba(124,140,255,.14),rgba(56,225,176,.06));border-radius:18px;padding:24px}
+.steps{padding-left:20px;margin:8px 0}.steps li{margin:4px 0}
+svg text{font-family:Inter,sans-serif}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#1c2130;border:1px solid var(--line);padding:10px 16px;border-radius:12px;opacity:0;transition:.25s;pointer-events:none;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.status{font-size:.88rem;margin-top:8px}
+.welcome-points{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:18px 0}
+.wp{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:14px;font-size:.9rem;color:var(--muted)}.wp b{color:var(--text);display:block;margin-bottom:2px}
+@media(max-width:560px){.card{padding:20px}.kv{grid-template-columns:1fr}.kv b{margin-top:6px}.nav .kbd{display:none}.btn{padding:12px 16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><div class="logo">G</div>Grok Bot Team Builder</div>
+    <button class="ghost" id="restart" title="Clear answers and start over">↺ Restart</button>
+  </header>
+  <div id="progressWrap"><div class="progress"><div id="bar"></div></div><div class="stepmeta"><span id="stepLabel"></span><span id="saved">Answers save automatically on this device</span></div></div>
+  <main class="card" id="app" aria-live="polite"></main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+"use strict";
+var STORE="grokbot-team-builder-v2";
+var ARCHITECT_URL="grokbot://app/v1/agent?id=0339c87a-c917-45fc-9df6-634457f20bb9";
+
+/* ---------- Questions ---------- */
+var CORE_BEFORE=[
+ {id:"welcome",type:"intro"},
+ {id:"outcome",type:"text",kicker:"Your goal",title:"Picture 90 days from now. What would make you say “this worked”?",lead:"One or two sentences. Concrete beats perfect. Tap an example to start from it.",examples:["Land 3 paid sponsorships","Get a new job offer","Stop missing bills and appointments","Double my qualified leads","Publish consistently every week","Finish my research report"],placeholder:"e.g. Land my first two paid brand deals and post 3 times a week without burning out",required:true},
+ {id:"domain",type:"single",kicker:"About you",title:"Which best describes what this is for?",lead:"This shapes the next few questions.",options:[["business","💼 Running a business"],["creator","🎬 Creator / audience"],["personal","🏡 Personal life"],["jobsearch","🧭 Job search"],["research","🔬 Research / learning"],["other","✨ Something else"]],required:true},
+ {id:"who",type:"text",kicker:"About you",title:"In a sentence, who are you and what do you do?",lead:"Where you are and your niche help the bots be specific.",placeholder:"e.g. Austin-based motorcycle YouTuber, 12k subscribers, shoot weekend rides and gear reviews"}
+];
+var BRANCH={
+ business:[
+  {id:"b_type",type:"multi",kicker:"Your business",title:"What kind of business?",options:["Services / agency","Consulting","E-commerce","SaaS / software","Local shop","Freelance"],free:true},
+  {id:"b_growth",type:"multi",kicker:"Your business",title:"Where does growth come from today?",options:["Referrals","Outbound outreach","Inbound / website","Social media","Partnerships","Repeat customers"],free:true},
+  {id:"b_bottleneck",type:"single",kicker:"Your business",title:"What's the biggest bottleneck right now?",options:["Not enough leads","Follow-up falls through","Admin eats my day","I don't know my numbers","Customer replies are slow"],free:true}],
+ creator:[
+  {id:"c_platforms",type:"multi",kicker:"Your channels",title:"Where do you publish?",options:["YouTube","Instagram","TikTok","X","Podcast","Newsletter","Blog"],free:true},
+  {id:"c_money",type:"multi",kicker:"Your channels",title:"How do (or will) you make money?",options:["Sponsorships / brand deals","Affiliate links","Ad revenue","Merch","Memberships","Courses / products"],free:true},
+  {id:"c_stuck",type:"single",kicker:"Your channels",title:"What's the hardest part right now?",options:["Coming up with ideas","Staying consistent","Finding & pitching sponsors","Editing / repurposing","Understanding what works"],free:true}],
+ personal:[
+  {id:"p_areas",type:"multi",kicker:"Your life",title:"Which areas need the most help?",options:["Bills & money","Calendar & appointments","Family logistics","Health & fitness","Home & errands","Travel"],free:true},
+  {id:"p_household",type:"single",kicker:"Your life",title:"Who are you coordinating for?",options:["Just me","Me + partner","Family with kids","Caring for a parent"],free:true}],
+ jobsearch:[
+  {id:"j_target",type:"text",kicker:"Your search",title:"What role, level and location are you targeting?",placeholder:"e.g. Senior product manager, remote or Austin, fintech"},
+  {id:"j_stage",type:"single",kicker:"Your search",title:"Where are you in the search?",options:["Just starting","Applying, few replies","Interviewing","Negotiating offers"],free:true},
+  {id:"j_help",type:"multi",kicker:"Your search",title:"Where do you want help?",options:["Finding openings","Tailoring resume/cover letters","Networking outreach drafts","Interview prep","Tracking applications"],free:true}],
+ research:[
+  {id:"r_topic",type:"text",kicker:"Your research",title:"What topic or question are you digging into?",placeholder:"e.g. Battery recycling economics in the US"},
+  {id:"r_output",type:"single",kicker:"Your research",title:"What do you need to produce?",options:["A report or paper","Decision memo","Ongoing monitoring","Learning for myself","Literature review"],free:true},
+  {id:"r_sources",type:"multi",kicker:"Your research",title:"Which sources matter most?",options:["Academic papers","News","Company filings","Social / X","Government data","Expert interviews"],free:true}],
+ other:[
+  {id:"o_describe",type:"text",kicker:"Tell us more",title:"Describe the situation like you'd tell a friend.",placeholder:"What's going on, and what does a good week look like?"},
+  {id:"o_kind",type:"multi",kicker:"Tell us more",title:"Which kinds of work would help most?",options:["Finding information","Writing & drafting","Organizing & reminders","Tracking numbers","Watching for news/changes"],free:true}]
+};
+var CORE_AFTER=[
+ {id:"tools",type:"multi",kicker:"Your tools",title:"Which tools and accounts do you use?",lead:"Bots work best with things they can read. Pick all that apply.",options:["Gmail","Google Calendar","Google Drive / Docs","Notion","Slack","X","YouTube","Instagram","Spreadsheets","CRM","Bank / finance app","GitHub"],free:true},
+ {id:"drains",type:"multi",kicker:"The pain",title:"What's repetitive, draining, or keeps getting dropped?",lead:"Be honest. This is what your bots will take off your plate.",options:["Inbox overload","Research & reading","Writing first drafts","Following up with people","Scheduling","Tracking numbers / reports","Coming up with ideas","Finding opportunities","Admin & paperwork","Remembering deadlines"],free:true,required:true},
+ {id:"cadence",type:"multi",kicker:"Rhythm",title:"How should your bots show up?",lead:"Routine bots wake on a schedule. On-demand bots wait for you to ask.",options:[["daily","☀️ Daily morning brief"],["weekly","📅 Weekly roundup"],["event","⚡ When something happens"],["ondemand","🙋 Only when I ask"]],required:true},
+ {id:"approvals",type:"multi",kicker:"Safety",title:"What must always wait for your “yes”?",lead:"Sending, spending, posting and deleting are always locked behind your approval. Add anything else.",options:["Sending messages","Spending money","Posting publicly","Deleting anything","Changing my calendar","Contacting new people","Sharing files"],locked:["Sending messages","Spending money","Posting publicly","Deleting anything"],free:true},
+ {id:"tone",type:"single",kicker:"Personality",title:"How should your bots talk to you?",options:[["crisp","Crisp & direct"],["warm","Warm & encouraging"],["playful","Playful & casual"],["formal","Formal & precise"],["coach","Straight-talking coach"]],free:true},
+ {id:"size",type:"single",kicker:"Team size",title:"How big a team do you want?",lead:"We always pick the smallest team that covers your goal.",options:[["1","Just one bot"],["min","As few as possible"],["3","Two or three"],["4","Up to four"]],required:true}
+];
+
+/* ---------- State ---------- */
+var state=load()||{i:0,a:{}};
+function load(){try{return JSON.parse(localStorage.getItem(STORE))}catch(e){return null}}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){}}
+function steps(){var d=state.a.domain&&state.a.domain.v;return CORE_BEFORE.concat(BRANCH[d]||[],CORE_AFTER,[{id:"result",type:"result"}])}
+function ans(id){return state.a[id]||{v:null,t:""}}
+var $=function(s,r){return (r||document).querySelector(s)};
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function optVal(o){return Array.isArray(o)?o[0]:o}
+function optLbl(o){return Array.isArray(o)?o[1]:o}
+function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove("show")},1800)}
+
+/* ---------- Render ---------- */
+function render(){
+ var S=steps();if(state.i>=S.length)state.i=S.length-1;if(state.i<0)state.i=0;
+ var q=S[state.i],app=$("#app");
+ var qcount=S.length-2,pos=Math.min(Math.max(state.i,0),qcount);
+ $("#bar").style.width=(q.type==="result"?100:Math.round(pos/qcount*100))+"%";
+ $("#stepLabel").textContent=q.type==="intro"?"Welcome":q.type==="result"?"Your team":("Question "+pos+" of "+qcount);
+ if(q.type==="intro")return renderIntro(app);
+ if(q.type==="result")return renderResult(app);
+ var a=ans(q.id),h='<div class="screen"><div class="kicker">'+esc(q.kicker||"")+'</div><h2 id="qt">'+esc(q.title)+'</h2>'+(q.lead?'<p class="lead">'+esc(q.lead)+'</p>':'');
+ if(q.type==="single"||q.type==="multi"){
+  if(q.id==="approvals"&&!a.v){a={v:q.locked.slice(),t:a.t||""};state.a[q.id]=a}
+  h+='<div class="chips" role="group" aria-labelledby="qt">';
+  q.options.forEach(function(o){var v=optVal(o),on=q.type==="single"?a.v===v:(a.v||[]).indexOf(v)>=0,lk=q.locked&&q.locked.indexOf(v)>=0;
+   h+='<button type="button" class="chip'+(lk?' locked':'')+'" data-v="'+esc(v)+'" aria-pressed="'+on+'">'+(lk?'🔒 ':'')+esc(optLbl(o))+'</button>'});
+  h+='</div>';
+  if(q.free)h+='<input type="text" id="free" placeholder="Anything else? (optional)" value="'+esc(a.t)+'">';
+ } else {
+  if(q.examples){h+='<div class="chips">';q.examples.forEach(function(e){h+='<button type="button" class="chip ex" data-ex="'+esc(e)+'">'+esc(e)+'</button>'});h+='</div>'}
+  h+='<textarea id="free" placeholder="'+esc(q.placeholder||"")+'">'+esc(a.t)+'</textarea>';
+ }
+ h+='<div class="nav"><button class="btn sec" id="back">← Back</button><span class="kbd"><kbd>Enter</kbd> next · <kbd>Esc</kbd> back</span><button class="btn" id="next">'+(state.i===S.length-2?"Build my team ✦":"Next →")+'</button></div></div>';
+ app.innerHTML=h;
+ app.querySelectorAll(".chip[data-v]").forEach(function(b){b.onclick=function(){
+  var v=b.getAttribute("data-v"),cur=ans(q.id);
+  if(q.locked&&q.locked.indexOf(v)>=0){toast("This one is always required 🔒");return}
+  if(q.type==="single"){cur.v=v;state.a[q.id]=cur;save();render();if(!q.free)setTimeout(next,160);return}
+  var arr=(cur.v||[]).slice(),k=arr.indexOf(v);if(k>=0)arr.splice(k,1);else arr.push(v);cur.v=arr;state.a[q.id]=cur;save();b.setAttribute("aria-pressed",k<0);validate();
+ }});
+ app.querySelectorAll(".chip.ex").forEach(function(b){b.onclick=function(){var f=$("#free");f.value=f.value?f.value+"; "+b.dataset.ex:b.dataset.ex;f.dispatchEvent(new Event("input"));f.focus()}});
+ var f=$("#free");if(f){f.oninput=function(){var c=ans(q.id);c.t=f.value;state.a[q.id]=c;save();validate()};setTimeout(function(){try{f.focus()}catch(e){}},30)}
+ $("#back").onclick=back;$("#next").onclick=next;validate();
+}
+function filled(q){var a=ans(q.id);return !!((a.t&&a.t.trim())||(Array.isArray(a.v)?a.v.length:a.v))}
+function validate(){var q=steps()[state.i],n=$("#next");if(n)n.disabled=!!(q.required&&!filled(q))}
+function next(){var q=steps()[state.i];if(q.required&&!filled(q)){toast("Pick or type something to continue");return}state.i++;save();render();window.scrollTo&&window.scrollTo(0,0)}
+function back(){if(state.i>0){state.i--;save();render()}}
+document.addEventListener("keydown",function(e){
+ var q=steps()[state.i];if(!q||q.type==="result")return;
+ if(e.key==="Escape"){back();return}
+ if(e.key==="Enter"&&!e.shiftKey){var tg=e.target;if(tg&&tg.tagName==="TEXTAREA"&&!(e.metaKey||e.ctrlKey))return;if(tg&&tg.classList&&tg.classList.contains("chip"))return;e.preventDefault();next()}
+});
+$("#restart").onclick=function(){if(state.i===0||confirm("Clear all answers and start over?")){state={i:0,a:{}};save();render()}};
+
+function renderIntro(app){
+ app.innerHTML='<div class="screen"><div class="kicker">Two-minute setup</div><h1>Build your own team of Grok Bots</h1><p class="lead">A Grok Bot is an AI helper with one clear job: it reads, researches, drafts and organizes for you, on a schedule or when you ask. You don\'t need to know anything technical. Answer a few quick questions and we\'ll design the smallest team that gets you to your goal.</p><div class="welcome-points"><div class="wp"><b>🎯 Tailored</b>Each bot gets one job, a voice, and a schedule built from your answers.</div><div class="wp"><b>🔒 Safe by default</b>Bots never send, spend, post or delete without your yes.</div><div class="wp"><b>🛠️ Built for you</b>Hand the plan to Bot Architect and it sets everything up.</div></div><div class="nav"><span></span><button class="btn" id="next">Let\'s start →</button></div></div>';
+ $("#next").onclick=next;
+}
+
+/* ---------- Team design ---------- */
+var ROLES={
+ scout:{emoji:"🔭",c:"#ffb547",title:"Scout",kw:["opportunit","find","sponsor","brand","news","trend","watch","monitor","openings","lead","partner","deal","changes"]},
+ researcher:{emoji:"🔬",c:"#7c8cff",title:"Researcher",kw:["research","read","paper","report","topic","learn","literature","sources","analysis","dig","memo","interview prep"]},
+ writer:{emoji:"✍️",c:"#c07cff",title:"Writer",kw:["writ","draft","cover letter","resume","pitch","email","copy","newsletter","blog","outreach draft","proposal"]},
+ ops:{emoji:"🗂️",c:"#38e1b0",title:"Ops",kw:["admin","schedul","deadline","remember","paperwork","track","follow","organiz","calendar","reminder","applications"]},
+ analyst:{emoji:"📊",c:"#2bb3ff",title:"Analyst",kw:["number","metric","report","analytics","what works","know my numbers","revenue","spreadsheet","tracking numbers","growth"]},
+ inbox:{emoji:"📥",c:"#ff8a5b",title:"Inbox Triage",kw:["inbox","email","replies","customer replies","gmail","messages","slow"]},
+ content:{emoji:"🎬",c:"#ff5fa2",title:"Content",kw:["idea","content","post","video","youtube","tiktok","instagram","repurpos","consistent","editing","publish","podcast"]},
+ sales:{emoji:"🤝",c:"#ffd166",title:"Sales Prep",kw:["sponsor","brand deal","lead","pitch","sales","client","prospect","outbound","media kit","rate","partnership","negotiat","pitching"]},
+ life:{emoji:"🏡",c:"#7ee081",title:"Life Admin",kw:["bill","family","home","errand","health","appointment","travel","kids","partner","parent","household"]}
+};
+var DOMAIN_BIAS={business:{sales:2,inbox:1.5,analyst:1.5,ops:1},creator:{content:3,sales:1.5,scout:1.5,analyst:1},personal:{life:4,ops:2,inbox:1},jobsearch:{scout:2.5,writer:2.5,ops:1.5,researcher:1},research:{researcher:4,scout:1.5,writer:1.5},other:{ops:1,researcher:1}};
+var DRAIN_MAP={"Inbox overload":"inbox","Research & reading":"researcher","Writing first drafts":"writer","Following up with people":"ops","Scheduling":"ops","Tracking numbers / reports":"analyst","Coming up with ideas":"content","Finding opportunities":"scout","Admin & paperwork":"ops","Remembering deadlines":"ops"};
+
+function allText(a){var out=[];Object.keys(a).forEach(function(k){var x=a[k];if(!x)return;if(Array.isArray(x.v))out=out.concat(x.v);else if(x.v)out.push(x.v);if(x.t)out.push(x.t)});return out.join(" | ").toLowerCase()}
+function lbl(id,v){var all=[].concat(CORE_BEFORE,CORE_AFTER);Object.keys(BRANCH).forEach(function(k){all=all.concat(BRANCH[k])});var q=all.filter(function(x){return x.id===id})[0];if(!q||!q.options)return v;var o=q.options.filter(function(o){return optVal(o)===v})[0];return o?optLbl(o).replace(/^[^\w]+\s*/,""):v}
+function list(id,a){var x=a[id];if(!x)return[];var r=Array.isArray(x.v)?x.v.map(function(v){return lbl(id,v)}):(x.v?[lbl(id,x.v)]:[]);if(x.t&&x.t.trim())r.push(x.t.trim());return r}
+function joinNice(arr){arr=arr.filter(Boolean);if(arr.length<2)return arr.join("");return arr.slice(0,-1).join(", ")+" and "+arr[arr.length-1]}
+
+function design(a){
+ var text=allText(a),dom=(a.domain&&a.domain.v)||"other",score={};
+ Object.keys(ROLES).forEach(function(r){var s=0;ROLES[r].kw.forEach(function(k){if(text.indexOf(k)>=0)s+=1});s+=(DOMAIN_BIAS[dom]||{})[r]||0;score[r]=s});
+ ((a.drains&&a.drains.v)||[]).forEach(function(d){var r=DRAIN_MAP[d];if(r)score[r]+=3});
+ if(/sponsor|brand deal|pitch/.test(text))score.sales+=3;
+ if(dom!=="personal")score.life-=2; if(dom==="personal"){score.sales-=3;score.content-=2}
+ var sz=(a.size&&a.size.v)||"min",cap=sz==="1"?1:sz==="3"?3:sz==="4"?4:3;
+ var ranked=Object.keys(score).sort(function(x,y){return score[y]-score[x]}).filter(function(r){return score[r]>=2.5});
+ if(!ranked.length)ranked=["ops"];
+ // overlap merges
+ var merges=[],picked=[];
+ ranked.forEach(function(r){
+  if(picked.length>=cap)return;
+  if(r==="writer"&&(picked.indexOf("content")>=0||picked.indexOf("sales")>=0)&&dom!=="jobsearch"){merges.push("Drafting folded into "+(picked.indexOf("sales")>=0?"Sales Prep":"Content")+" so two bots don't both write.");return}
+  if(r==="scout"&&picked.indexOf("researcher")>=0&&dom==="research"){merges.push("Scouting folded into the Researcher (same sources).");return}
+  if(r==="ops"&&picked.indexOf("life")>=0){merges.push("Admin folded into Life Admin.");return}
+  if(r==="life"&&picked.indexOf("ops")>=0){picked[picked.indexOf("ops")]="life";merges.push("Admin folded into Life Admin.");return}
+  picked.push(r);
+ });
+ // "min": trim weak tail
+ if(sz==="min"&&picked.length>2){var top=score[picked[0]];picked=picked.filter(function(r,i){return i<2||score[r]>=top*0.6})}
+ var coord=picked.length>=3&&cap>=4;
+ if(coord&&picked.length>3)picked=picked.slice(0,3);
+ var team=picked.map(function(r){return buildBot(r,a,dom)});
+ if(coord)team.unshift(buildCoordinator(a,team));
+ var overlap=checkOverlap(team);
+ return {team:team,merges:merges,overlap:overlap,domain:dom,coordinator:coord};
+}
+
+var TONES={crisp:"Crisp and direct. Short sentences, bullets, no filler, no hype.",warm:"Warm and encouraging, but still concise. Celebrate progress briefly, then get to the point.",playful:"Playful and casual, light humor, never at the expense of clarity.",formal:"Formal and precise. Complete sentences, exact numbers, cite sources.",coach:"Straight-talking coach. Honest, a little blunt, always ends with the next concrete step."};
+function voice(a){var t=a.tone||{};var base=TONES[t.v]||TONES.crisp;if(t.t&&t.t.trim())base+=" Also: "+t.t.trim()+".";return base}
+
+function cadenceFor(role,a){
+ var c=(a.cadence&&a.cadence.v)||["ondemand"],has=function(x){return c.indexOf(x)>=0};
+ var map={
+  scout:has("daily")?{mode:"routine",plain:"Every weekday at 7:00 AM",cron:"0 7 * * 1-5"}:has("weekly")?{mode:"routine",plain:"Every Monday at 8:00 AM",cron:"0 8 * * 1"}:null,
+  researcher:has("weekly")?{mode:"routine",plain:"Every Friday at 9:00 AM (weekly digest), plus on demand",cron:"0 9 * * 5"}:null,
+  analyst:has("weekly")||has("daily")?{mode:"routine",plain:"Every Monday at 9:00 AM",cron:"0 9 * * 1"}:null,
+  inbox:has("daily")?{mode:"routine",plain:"Every weekday at 7:30 AM and 1:00 PM",cron:"30 7 * * 1-5 and 0 13 * * 1-5"}:has("event")?{mode:"event",plain:"When an important email arrives (checked every 2 hours, 8 AM to 6 PM)",cron:"0 8-18/2 * * *"}:null,
+  ops:has("daily")?{mode:"routine",plain:"Every day at 7:00 AM (today's deadlines and follow-ups)",cron:"0 7 * * *"}:has("weekly")?{mode:"routine",plain:"Every Sunday at 6:00 PM (week-ahead plan)",cron:"0 18 * * 0"}:null,
+  life:has("daily")?{mode:"routine",plain:"Every day at 7:00 AM, plus Sunday 6:00 PM week-ahead",cron:"0 7 * * * and 0 18 * * 0"}:has("weekly")?{mode:"routine",plain:"Every Sunday at 6:00 PM",cron:"0 18 * * 0"}:null,
+  content:has("weekly")?{mode:"routine",plain:"Every Monday at 8:00 AM (fresh ideas for the week)",cron:"0 8 * * 1"}:has("daily")?{mode:"routine",plain:"Every weekday at 8:00 AM",cron:"0 8 * * 1-5"}:null,
+  sales:has("weekly")?{mode:"routine",plain:"Every Tuesday at 9:00 AM (pipeline + new prospects)",cron:"0 9 * * 2"}:has("event")?{mode:"event",plain:"When a new lead or inquiry shows up",cron:"event"}:null,
+  writer:null,
+  coordinator:has("daily")?{mode:"routine",plain:"Every weekday at 7:45 AM (one combined brief)",cron:"45 7 * * 1-5"}:has("weekly")?{mode:"routine",plain:"Every Monday at 8:30 AM (team roundup)",cron:"30 8 * * 1"}:null
+ };
+ return map[role]||{mode:"on-demand",plain:"On demand, only when you ask",cron:"none"};
+}
+
+function buildBot(r,a,dom){
+ var outcome=(a.outcome&&a.outcome.t||"").trim().replace(/\.$/,"")||"reach your goal";
+ var who=(a.who&&a.who.t||"").trim();
+ var tools=list("tools",a),plats=list("c_platforms",a),topic=(a.r_topic&&a.r_topic.t)||"",target=(a.j_target&&a.j_target.t)||"";
+ var niche=who?who.split(/[,.;]/)[0]:"";
+ var D={
+  scout:{name:dom==="creator"?"Sponsor Scout":dom==="jobsearch"?"Job Scout":dom==="business"?"Lead Scout":"Signal Scout",
+   job:dom==="creator"?"find brands, sponsorship programs and trends that fit "+(niche||"the channel")+" and surface the best 3-5 each run":dom==="jobsearch"?"find fresh openings that match "+(target||"the target role")+" and rank the best 5":dom==="business"?"spot new prospects, partners and market signals worth acting on":"watch for news and changes that matter to the goal and report only what's new",
+   anti:["write pitches or final copy","contact anyone","subscribe, sign up or buy anything"]},
+  researcher:{name:"Deep Researcher",job:"answer specific questions"+(topic?" about "+topic:"")+" with sourced, skimmable briefs",anti:["give opinions without sources","draft outreach or posts","pad answers to look thorough"]},
+  writer:{name:dom==="jobsearch"?"Application Writer":"Draft Writer",job:dom==="jobsearch"?"tailor resumes, cover letters and networking notes to each opening":"turn notes and requests into ready-to-edit first drafts",anti:["send, post or submit anything","invent facts, numbers or experience","research from scratch (ask for inputs)"]},
+  ops:{name:dom==="jobsearch"?"Pipeline Keeper":"Ops Desk",job:dom==="jobsearch"?"track every application, interview and follow-up date and flag what's due":"keep deadlines, follow-ups and loose ends from slipping",anti:["change calendar events without approval","send reminders to other people","do the underlying work itself"]},
+  analyst:{name:dom==="creator"?"Channel Analyst":"Numbers Analyst",job:dom==="creator"?"read "+(plats.length?joinNice(plats):"channel")+" performance and say what's working, what isn't, and one thing to try next":"turn raw numbers into a short weekly read on what changed and why",anti:["make changes to accounts or settings","present guesses as facts","produce charts nobody asked for"]},
+  inbox:{name:"Inbox Triage",job:"sort incoming email into reply-now, waiting, and ignore, and draft replies for the reply-now pile",anti:["send any email","unsubscribe, archive or delete without a yes","reply to unknown senders"]},
+  content:{name:dom==="creator"?"Content Producer":"Content Planner",job:"plan "+(plats.length?joinNice(plats)+" ":"")+"content: ideas, hooks, outlines and repurposing so publishing stays consistent",anti:["post or schedule anything publicly","chase trends that don't fit the brand","edit video files or touch account settings"]},
+  sales:{name:dom==="creator"?"Deal Prep":"Sales Prep",job:dom==="creator"?"prepare sponsorship pitches, media-kit numbers and rate suggestions for brands you approve":"research prospects and prepare call notes and outreach drafts",anti:["send outreach or contact brands directly","agree to terms, prices or contracts","overstate audience numbers"]},
+  life:{name:"Life Admin",job:"keep bills, appointments and household logistics on track with a clear what's-next list",anti:["pay bills or move money","book or cancel appointments without a yes","share family details with anyone"]}
+ }[r];
+ var w=cadenceFor(r,a);
+ return finish({role:r,title:ROLES[r].title,emoji:ROLES[r].emoji,color:ROLES[r].c,name:D.name,job:D.job,anti:D.anti,voice:voice(a),wake:w,tools:tools,outcome:outcome,who:who},a);
+}
+function buildCoordinator(a,team){
+ var w=cadenceFor("coordinator",a);
+ return finish({role:"coordinator",title:"Coordinator",emoji:"🧭",color:"#ffffff",name:"Team Lead",job:"combine the team's outputs into one short brief, spot conflicts, and route requests to the right bot ("+team.map(function(b){return b.name}).join(", ")+")",anti:["do the specialists' work itself","repeat everything each bot said","take any action that needs approval"],voice:voice(a),wake:w,tools:list("tools",a),outcome:(a.outcome&&a.outcome.t||"").trim().replace(/\.$/,""),who:(a.who&&a.who.t||"").trim()},a);
+}
+function approvalsList(a){var l=list("approvals",a);["Sending messages","Spending money","Posting publicly","Deleting anything"].forEach(function(x){if(l.indexOf(x)<0)l.unshift(x)});return l}
+function finish(b,a){
+ var ap=approvalsList(a);
+ var d="You are "+b.name+", a "+b.title+" Grok Bot"+(b.who?" working for "+b.who:"")+".\n\n";
+ d+="Your ONLY job: "+b.job+".\n";
+ if(b.outcome)d+="This serves one 90-day goal: "+b.outcome+".\n";
+ d+="\nYou do NOT:\n"+b.anti.map(function(x){return"- "+x}).join("\n")+"\n";
+ d+="If a request falls outside your job, say so in one line and suggest which teammate (or the user) should handle it.\n";
+ d+="\nApproval rules (non-negotiable):\nNever do any of the following without an explicit \"yes\" from the user in this conversation: "+ap.join("; ").toLowerCase()+". Prepare drafts and recommendations instead, and ask.\n";
+ if(b.tools.length)d+="\nTools you may read from: "+b.tools.join(", ")+". Read-only by default.\n";
+ d+="\nVoice: "+b.voice+"\n";
+ d+="\nWake: "+(b.wake.mode==="on-demand"?"On demand. Only act when the user asks you something.":b.wake.plain+" ("+b.wake.mode+"), and also whenever the user asks.")+"\n";
+ d+="\nOutput: lead with the answer or the top 3 items, then details. Keep each run under 200 words unless asked for more.\n";
+ d+="Stay quiet when there's nothing to report. Don't send \"nothing new\" messages; skip the run instead.";
+ b.description=d;return b;
+}
+function checkOverlap(team){
+ var notes=[],seen={};
+ team.forEach(function(b){(b.job.match(/\b(draft|pitch|ideas|research|track|follow)\w*/g)||[]).forEach(function(k){(seen[k]=seen[k]||[]).push(b.name)})});
+ Object.keys(seen).forEach(function(k){var n=seen[k].filter(function(v,i,s){return s.indexOf(v)===i});if(n.length>1&&k.indexOf("draft")===0)notes.push(joinNice(n)+" both draft; "+n[0]+" owns final wording, others hand over notes.")});
+ return notes;
+}
+
+/* ---------- Outputs ---------- */
+function summary(a){
+ var dom=lbl("domain",a.domain&&a.domain.v);var L=[];
+ L.push("90-day outcome: "+((a.outcome&&a.outcome.t)||"—"));
+ L.push("Focus area: "+(dom||"—")+((a.who&&a.who.t)?" — "+a.who.t:""));
+ (BRANCH[a.domain&&a.domain.v]||[]).forEach(function(q){var v=list(q.id,a);if(v.length)L.push(q.title.replace(/\?$/,"")+": "+v.join(", "))});
+ L.push("Tools: "+(list("tools",a).join(", ")||"none listed"));
+ L.push("Draining / dropped: "+(list("drains",a).join(", ")||"—"));
+ L.push("Rhythm: "+(list("cadence",a).join(", ")||"on demand"));
+ L.push("Needs approval: "+approvalsList(a).join(", "));
+ L.push("Tone: "+(list("tone",a).join(", ")||"Crisp & direct"));
+ L.push("Team size preference: "+(list("size",a).join(", ")||"As few as possible"));
+ return L;
+}
+function toMarkdown(R,a){
+ var m="# Your Grok Bot Team\n\n_Generated "+new Date().toLocaleDateString()+" by Grok Bot Team Builder_\n\n## Interview summary\n\n"+summary(a).map(function(l){return"- "+l}).join("\n")+"\n\n## The team ("+R.team.length+" bot"+(R.team.length>1?"s":"")+")\n\n";
+ R.team.forEach(function(b){m+="### "+b.emoji+" "+b.name+" ("+b.title+")\n\n- **One job:** "+b.job+"\n- **Not its job:** "+b.anti.join("; ")+"\n- **Voice:** "+b.voice+"\n- **Wake:** "+b.wake.plain+(b.wake.cron!=="none"?" (`"+b.wake.cron+"`)":"")+"\n\n**Description (paste this):**\n\n```\n"+b.description+"\n```\n\n"});
+ m+="## Overlap check\n\n"+overlapLines(R).map(function(x){return"- "+x}).join("\n")+"\n\n## How they work together\n\n"+flowText(R)+"\n\n## Setup\n\n"+setupSteps().map(function(s,i){return(i+1)+". "+s}).join("\n")+"\n";
+ return m;
+}
+function overlapLines(R){var l=R.merges.concat(R.overlap);if(!l.length)l.push("No overlapping jobs. Each bot owns one distinct job.");return l}
+function flowText(R){var sp=R.team.filter(function(b){return b.role!=="coordinator"});if(R.coordinator)return"Specialists ("+sp.map(function(b){return b.name}).join(", ")+") each do their one job and report to Team Lead, which sends you a single combined brief. Anything risky comes to you for a yes.";if(sp.length===1)return sp[0].name+" works directly with you and asks before any risky action.";return sp.map(function(b){return b.name}).join(" → ")+" → You. Each bot hands its output forward; nothing leaves without your approval."}
+function setupSteps(){return["Easiest: copy the Bot Architect brief below, open Bot Architect in Grok Bot, paste it, and it will confirm the plan and build the team for you.","Or do it yourself: create a new bot in Grok Bot for each card.","Paste the bot's name and its full description.","Connect only the tools it needs, then try it once on demand before relying on the schedule."]}
+function brief(R,a){
+ var t="BOT ARCHITECT BRIEF\n===================\nPlease build this team of Grok Bots for me. Confirm the plan with me first, then create each bot with the name and description below. Keep every approval rule exactly as written.\n\n--- INTERVIEW SUMMARY ---\n"+summary(a).map(function(l){return"• "+l}).join("\n")+"\n\n--- PROPOSED TEAM ---\n";
+ R.team.forEach(function(b,i){t+=(i+1)+". "+b.name+" ("+b.title+"): "+b.job+". Wake: "+b.wake.plain+".\n"});
+ t+="\nHow they work together: "+flowText(R)+"\n\n--- FULL DESCRIPTIONS ---\n";
+ R.team.forEach(function(b){t+="\n### "+b.name+"\n"+b.description+"\n"});
+ t+="\n--- END OF BRIEF ---";return t;
+}
+function briefJSON(R,a){return{type:"grokbot.team_brief",version:2,createdAt:new Date().toISOString(),interview:summary(a),answers:a,team:R.team.map(function(b){return{name:b.name,role:b.title,oneJob:b.job,antiJobs:b.anti,voice:b.voice,wake:b.wake,description:b.description}}),overlap:overlapLines(R),flow:flowText(R),brief:brief(R,a)}}
+
+function diagram(R){
+ var sp=R.team.filter(function(b){return b.role!=="coordinator"}),n=sp.length,W=640,H=R.coordinator?250:170,bw=Math.min(150,(W-20)/n-14),s="";
+ s+='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="Team diagram"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6480"/></marker></defs>';
+ var ys=20,userY=H-46,hubY=R.coordinator?105:null;
+ sp.forEach(function(b,i){var x=(W/n)*i+(W/n-bw)/2,cx=x+bw/2;
+  s+='<rect x="'+x+'" y="'+ys+'" width="'+bw+'" height="46" rx="12" fill="#181c25" stroke="'+b.color+'"/><text x="'+cx+'" y="'+(ys+28)+'" text-anchor="middle" fill="#eef1f6" font-size="13" font-weight="600">'+esc(b.emoji+" "+b.name)+'</text>';
+  s+='<line x1="'+cx+'" y1="'+(ys+46)+'" x2="'+(W/2)+'" y2="'+((hubY||userY)-2)+'" stroke="#5b6480" stroke-width="1.5" marker-end="url(#ar)"/>'});
+ if(R.coordinator){s+='<rect x="'+(W/2-80)+'" y="'+hubY+'" width="160" height="42" rx="12" fill="#232a3d" stroke="#fff"/><text x="'+W/2+'" y="'+(hubY+26)+'" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">🧭 Team Lead</text><line x1="'+W/2+'" y1="'+(hubY+42)+'" x2="'+W/2+'" y2="'+(userY-2)+'" stroke="#5b6480" stroke-width="1.5" marker-end="url(#ar)"/>'}
+ s+='<rect x="'+(W/2-90)+'" y="'+userY+'" width="180" height="40" rx="20" fill="#38e1b0"/><text x="'+W/2+'" y="'+(userY+25)+'" text-anchor="middle" fill="#04110d" font-size="13" font-weight="700">You: approve / decide</text></svg>';
+ return s;
+}
+function copy(text,label){
+ function ok(){toast((label||"Copied")+" ✓")}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,fallback)}else fallback();
+ function fallback(){var t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();try{document.execCommand("copy");ok()}catch(e){toast("Select and copy manually")}document.body.removeChild(t)}
+}
+function download(name,text,type){var b=new Blob([text],{type:type}),u=URL.createObjectURL(b),l=document.createElement("a");l.href=u;l.download=name;document.body.appendChild(l);l.click();setTimeout(function(){URL.revokeObjectURL(u);l.remove()},500)}
+
+function renderResult(app){
+ var a=state.a,R=design(a),B=brief(R,a);
+ window.__lastResult={R:R,md:toMarkdown(R,a),brief:B,json:briefJSON(R,a)};
+ var h='<div class="screen"><div class="kicker">Your team is ready</div><h1>'+R.team.length+' bot'+(R.team.length>1?'s':'')+' to get you there</h1><p class="lead">Built for: <em>'+esc((a.outcome&&a.outcome.t)||"your goal")+'</em></p>';
+ h+='<div class="grid">';
+ R.team.forEach(function(b,i){h+='<div class="bot" style="--c:'+b.color+'"><div class="top"><div class="av">'+b.emoji+'</div><div><h3>'+esc(b.name)+'</h3><div class="role">'+esc(b.title)+'</div></div></div><div class="kv"><b>One job</b><span>'+esc(b.job)+'</span><b>Not its job</b><span>'+esc(b.anti.join(" · "))+'</span><b>Voice</b><span>'+esc(b.voice)+'</span><b>Wake</b><span>'+esc(b.wake.plain)+'</span></div><details><summary>Full description</summary><pre>'+esc(b.description)+'</pre></details><div class="row"><button class="btn sm sec" data-copy="'+i+'">Copy description</button><button class="btn sm sec" data-copyname="'+i+'">Copy name</button></div></div>'});
+ h+='</div>';
+ h+='<div class="note'+(R.merges.length||R.overlap.length?'':' ok')+'"><b>Overlap check:</b> '+esc(overlapLines(R).join(" "))+'</div>';
+ h+='<div class="note ok"><b>Safety:</b> every bot is told never to '+esc(approvalsList(a).join(", ").toLowerCase())+' without your yes.</div>';
+ h+='<div class="section"><h2>How they work together</h2><p class="lead">'+esc(flowText(R))+'</p>'+diagram(R)+'</div>';
+ h+='<div class="section handoff" id="handoff"><div class="kicker">The easy way</div><h2>Build this team with Bot Architect</h2><p>Bot Architect is a Grok Bot that builds other bots. <b>Open Bot Architect in Grok Bot, paste this brief, and it will confirm and build your team.</b></p><div class="row"><button class="btn green" id="copyBrief">📋 Copy Bot Architect brief</button><a class="btn" id="openArch" href="'+ARCHITECT_URL+'">Open Bot Architect ↗</a></div><p class="hint">The Open button works inside the Grok Bot app for the account that owns Bot Architect; it may not open for others. If it doesn\'t, open Bot Architect from your bot list and paste the brief.</p><details><summary>Preview brief</summary><pre id="briefPre">'+esc(B)+'</pre></details>';
+ h+='<details><summary>Advanced: send the brief to a webhook</summary><p class="hint">If you have an automation endpoint, we\'ll POST the brief as JSON.</p><div class="row" style="flex-wrap:nowrap"><input type="url" id="hook" placeholder="https://example.com/your-webhook" value="'+esc(state.hook||"")+'"><button class="btn sm" id="sendHook">Send</button></div><div class="status" id="hookStatus"></div></details></div>';
+ h+='<div class="section"><h2>Prefer to set it up yourself?</h2><ol class="steps">'+setupSteps().map(function(s){return"<li>"+esc(s)+"</li>"}).join("")+'</ol><div class="row"><button class="btn sec" id="dlMd">⬇ Download Markdown</button><button class="btn sec" id="dlJson">⬇ Download JSON</button></div></div>';
+ h+='<div class="nav"><button class="btn sec" id="back">← Edit answers</button><button class="btn sec" id="again">Start a new team</button></div></div>';
+ app.innerHTML=h;
+ app.querySelectorAll("[data-copy]").forEach(function(b){b.onclick=function(){copy(R.team[+b.dataset.copy].description,"Description copied")}});
+ app.querySelectorAll("[data-copyname]").forEach(function(b){b.onclick=function(){copy(R.team[+b.dataset.copyname].name,"Name copied")}});
+ $("#copyBrief").onclick=function(){copy(B,"Brief copied. Now paste it into Bot Architect")};
+ $("#dlMd").onclick=function(){download("grok-bot-team.md",toMarkdown(R,a),"text/markdown")};
+ $("#dlJson").onclick=function(){download("grok-bot-team.json",JSON.stringify(briefJSON(R,a),null,2),"application/json")};
+ $("#back").onclick=back;$("#again").onclick=function(){if(confirm("Clear all answers and start over?")){state={i:0,a:{}};save();render()}};
+ $("#hook").oninput=function(e){state.hook=e.target.value;save()};
+ $("#sendHook").onclick=function(){
+  var url=$("#hook").value.trim(),st=$("#hookStatus");
+  if(!/^https?:\/\//i.test(url)){st.style.color="var(--bad)";st.textContent="Enter a valid http(s) URL.";return}
+  var body=JSON.stringify(briefJSON(R,a));st.style.color="var(--muted)";st.textContent="Sending…";
+  fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:body}).then(function(r){
+   if(r.ok){st.style.color="var(--acc2)";st.textContent="✓ Delivered ("+r.status+")."}else{st.style.color="var(--bad)";st.textContent="✗ Webhook responded "+r.status+"."}
+  }).catch(function(){
+   return fetch(url,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:body}).then(function(){st.style.color="var(--warn)";st.textContent="Sent in no-cors mode. The browser can't confirm the response; check your endpoint."}).catch(function(e){st.style.color="var(--bad)";st.textContent="✗ Couldn't reach the webhook: "+(e&&e.message||"network error")})
+  });
+ };
+}
+window.GrokTeam={design:design,toMarkdown:toMarkdown,brief:brief,briefJSON:briefJSON};
+render();
+})();
+</script>
+</body>
+</html>
